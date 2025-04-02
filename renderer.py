@@ -7,8 +7,10 @@ def draw_home_screen(stdscr):
     stdscr.addstr(8, 5, "Hit Enter to Start Game...")
     stdscr.refresh()
 
-def draw_game_screen(stdscr, ship_pos):
+def draw_game_screen(stdscr, ship_pos, laser_active, laser_pos):
     stdscr.clear()
     stdscr.addstr(10, ship_pos, "A")
+    if laser_active:
+        stdscr.addstr(laser_pos[1], laser_pos[0], "|")
     stdscr.refresh()
 
