@@ -9,7 +9,15 @@ def draw_home_screen(stdscr):
 
 def draw_game_screen(stdscr, ship_pos, laser_active, laser_pos):
     stdscr.clear()
+    # create background
+    for i in range(0, 12):
+        stdscr.addstr(i, 1, "|")
+        stdscr.addstr(i, 41, "|")
+
+    # add ship
     stdscr.addstr(10, ship_pos, "A")
+
+    # display laser
     if laser_active:
         stdscr.addstr(laser_pos[1], laser_pos[0], "|")
     stdscr.refresh()

@@ -1,10 +1,14 @@
 import curses
 from curses import wrapper
+import time
 from game import update_ship_position, update_laser_position
 from renderer import draw_game_screen, draw_home_screen
 
 def main(stdscr):
     curses.curs_set(0)
+    stdscr.nodelay(True)
+    stdscr.timeout(0)
+
     game_started = False
     ship_pos = 21
     laser_active = False
@@ -39,5 +43,7 @@ def main(stdscr):
         # Esc to exit
         if key == 27:
             break
+
+        time.sleep(0.05)
  
 wrapper(main)
