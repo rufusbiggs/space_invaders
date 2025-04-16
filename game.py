@@ -29,7 +29,16 @@ def move_aliens_down(alien_pos, alien_alive):
         alien_pos -= 1
 
 def generate_alien_row():
-    array_length = game_width - 11
+    array_length = game_width - 10
     row_aliens = [random.choice([0, 1]) for _ in range(array_length)]
 
     return row_aliens
+
+def check_laser_hit(alien_row, alien_height, laser_pos):
+    # basically seeing if alien position is equal to laser position
+    for i, alien in enumerate(alien_row):
+        if alien == 1:
+            alien_pos = [i + 5, alien_height]
+            if alien_pos == laser_pos:
+                alien_row[i] = 0
+                return "hit", alien_row

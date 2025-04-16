@@ -16,7 +16,7 @@ def main(stdscr):
 
     # aliens alive at start 1 means alive 0 means destroyed
     aliens = generate_alien_row()
-    alien_pos = 4
+    alien_height = 4
 
     while not game_started:
         draw_home_screen(stdscr)
@@ -31,10 +31,10 @@ def main(stdscr):
 
     while game_started:
         if laser_active:
-            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_pos, laser_pos)
+            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos)
             laser_pos, laser_active = update_laser_position(laser_pos, laser_direction)
         else:
-            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_pos, laser_pos=None)
+            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos=None)
 
         key = stdscr.getch()
         ship_pos = update_ship_position(ship_pos, key)
