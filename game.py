@@ -40,7 +40,7 @@ def check_laser_hit(alien_row, alien_height, laser_pos):
     # laser_index in relation to alien_row = x - 5
 
     laser_xpos_idx = laser_pos[0] - 5
-    if laser_xpos_idx >= game_width - 10:
+    if laser_xpos_idx >= game_width - 10 or laser_xpos_idx < 0:
         return False
     
     if alien_row[laser_xpos_idx] == 1:
