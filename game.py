@@ -36,9 +36,12 @@ def generate_alien_row():
 
 def check_laser_hit(alien_row, alien_height, laser_pos):
     # basically seeing if alien position is equal to laser position
-    for i, alien in enumerate(alien_row):
-        if alien == 1:
-            alien_pos = [i + 5, alien_height]
-            if alien_pos == laser_pos:
-                alien_row[i] = 0
-                return "hit", alien_row
+    # laser_pos = [x, y]
+    # laser_index in relation to alien_row = x - 5
+
+    laser_xpos_idx = laser_pos[0] - 5
+    if alien_row[laser_xpos_idx] == 1:
+        if laser_pos[1] == alien_height:
+            return True
+    else: 
+        return False
