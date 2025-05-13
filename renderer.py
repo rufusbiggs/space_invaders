@@ -8,7 +8,8 @@ def draw_home_screen(stdscr):
     stdscr.addstr(8, 5, "Hit Enter to Start Game...")
     stdscr.refresh()
 
-def draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos, hit):
+def draw_game_screen(stdscr, ship_pos, ship_laser_active, enemy_laser_active, aliens, alien_height, ship_laser_pos, enemy_laser_pos, ship_hit):
+    
     stdscr.clear()
     # create background
     for i in range(0, game_height):
@@ -24,12 +25,16 @@ def draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser
             stdscr.addstr(alien_height, i + 5, "M")
 
     # display laser
-    if laser_active:
-        stdscr.addstr(laser_pos[1], laser_pos[0], "|")
+    if ship_laser_active:
+        stdscr.addstr(ship_laser_pos[1], ship_laser_pos[0], "|")
     stdscr.refresh()
 
-    if hit:
-        stdscr.addstr(hit[1], hit[0] + 5, "X")
+    if enemy_laser_active:
+        stdscr.addstr(enemy_laser_pos[1], enemy_laser_pos[0], "*")
+    stdscr.refresh()
+
+    if ship_hit:
+        stdscr.addstr(ship_hit[1], ship_hit[0] + 5, "X")
     stdscr.refresh()
 
 def draw_game_won(stdscr):

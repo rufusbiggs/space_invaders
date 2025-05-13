@@ -23,6 +23,10 @@ def update_laser_position(laser_pos, laser_direction):
     
     return laser_pos, laser_active
 
+def generate_enemy_laser():
+
+    return [random.randint(1, game_width - 1), 0]
+
 def move_aliens_down(alien_pos, alien_alive):
     if alien_alive:
         # move all aliens down a space?
@@ -47,6 +51,9 @@ def check_laser_hit(alien_row, alien_height, laser_pos):
             return True
     else: 
         return False
+    
+# def check_ship_hit(ship_pos, enemy_laser_pos):
+    
 
 def check_game_won(alien_row):
     if 1 in alien_row:
