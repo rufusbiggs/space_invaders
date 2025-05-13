@@ -47,3 +47,9 @@ def check_laser_hit(alien_row, alien_height, laser_pos):
             return True
     else: 
         return False
+
+def check_game_won(alien_row):
+    if 1 in alien_row:
+        return False
+    else:
+        return True

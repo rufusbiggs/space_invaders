@@ -32,6 +32,10 @@ def draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser
         stdscr.addstr(hit[1], hit[0] + 5, "X")
     stdscr.refresh()
 
-
+def draw_game_won(stdscr):
+    stdscr.clear()
+    stdscr.addstr(4, 5, "VICTORY!!!")
+    stdscr.addstr(8, 5, "Hit Enter to Start new Game...")
+    stdscr.refresh()
     
 

@@ -1,8 +1,8 @@
 import curses
 from curses import wrapper
 import time
-from game import update_ship_position, update_laser_position, generate_alien_row, check_laser_hit
-from renderer import draw_game_screen, draw_home_screen
+from game import update_ship_position, update_laser_position, generate_alien_row, check_laser_hit, check_game_won
+from renderer import draw_game_screen, draw_home_screen, draw_game_won
 from game_parameters import game_height
 
 def main(stdscr):
@@ -13,13 +13,17 @@ def main(stdscr):
     game_started = False
     ship_pos = game_height / 2
     laser_active = False
-
-    # aliens alive at start 1 means alive 0 means destroyed
-    aliens = generate_alien_row()
+    victory = False
     alien_height = 4
 
     while not game_started:
-        draw_home_screen(stdscr)
+        # aliens alive at start 1 means alive 0 means destroyed
+        aliens = generate_alien_row()
+
+        if victory:
+            draw_game_won(stdscr)
+        else:
+            draw_home_screen(stdscr)
         key = stdscr.getch()
         # Enter to start game
         if key == 10:
@@ -29,32 +33,40 @@ def main(stdscr):
         if key == 27:
             break
 
-    while game_started:
-        if laser_active:
-            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos, hit=None)
-            if check_laser_hit(aliens, alien_height, laser_pos):
-                hit_x = laser_pos[0] - 5
-                aliens[hit_x] = 0
-                laser_active = False
-                draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos, [hit_x, alien_height])
+        while game_started:
+            if laser_active:
+                draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos, hit=None)
+                if check_laser_hit(aliens, alien_height, laser_pos):
+                    hit_x = laser_pos[0] - 5
+                    aliens[hit_x] = 0
+                    laser_active = False
+                    draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos, [hit_x, alien_height])
+                else:
+                    laser_pos, laser_active = update_laser_position(laser_pos, laser_direction)
             else:
-                laser_pos, laser_active = update_laser_position(laser_pos, laser_direction)
-        else:
-            draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos=None, hit=None)
+                draw_game_screen(stdscr, ship_pos, laser_active, aliens, alien_height, laser_pos=None, hit=None)
 
-        key = stdscr.getch()
-        ship_pos = update_ship_position(ship_pos, key)
+            key = stdscr.getch()
+            ship_pos = update_ship_position(ship_pos, key)
 
-        # fire laser (space bar)
-        if key == 32 and not laser_active:
-            laser_direction = "ship"
-            laser_pos = [ship_pos, game_height - 3]
-            laser_active = True
+            # fire laser (space bar)
+            if key == 32 and not laser_active:
+                laser_direction = "ship"
+                laser_pos = [ship_pos, game_height - 3]
+                laser_active = True
 
-        # Esc to exit
-        if key == 27:
-            break
+            # Esc to exit
+            if key == 27:
+                victory = False
+                game_started = False
 
-        time.sleep(0.05)
- 
+            if check_game_won(aliens):
+                victory = True
+                game_started = False
+                
+            time.sleep(0.05)
+
+    
+
+        
 wrapper(main)
