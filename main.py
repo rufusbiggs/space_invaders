@@ -2,9 +2,9 @@ import curses
 from curses import wrapper
 import random
 import time
-from game import update_ship_position, update_laser_position, generate_alien_row, check_laser_hit, check_game_won, generate_enemy_laser
-from renderer import draw_game_screen, draw_home_screen, draw_game_won
-from game_parameters import game_height
+from game import update_ship_position, update_laser_position, generate_alien_row, check_laser_hit, check_game_won, generate_enemy_laser, check_ship_hit
+from renderer import draw_game_screen, draw_home_screen, draw_game_won, draw_game_over, animate_ship_explosion
+from game_parameters import game_height, game_width
 
 def main(stdscr):
     curses.curs_set(0)
@@ -12,12 +12,13 @@ def main(stdscr):
     stdscr.timeout(0)
 
     game_started = False
-    ship_pos = game_height / 2
+    ship_pos = game_width / 2
     ship_laser_active = False
     enemy_laser_active = False
     victory = False
     alien_height = 4
     alien_hit = False
+    ship_hit = False
 
     while not game_started:
         # aliens alive at start 1 means alive 0 means destroyed
@@ -48,8 +49,15 @@ def main(stdscr):
                     ship_laser_pos, ship_laser_active = update_laser_position(ship_laser_pos, "ship")
 
             if enemy_laser_active:
-                if False: # if check_ship_hit(ship_pos, enemy_laser_pos):
+                if check_ship_hit(ship_pos, enemy_laser_pos):
                     ship_hit = True
+                    enemy_laser_active = False
+
+                    animate_ship_explosion(ship_pos - 2, game_height - 2, stdscr)
+
+                    draw_game_over(stdscr)
+                    game_started = False
+                    ship_hit = False
                 else:
                     enemy_laser_pos, enemy_laser_active = update_laser_position(enemy_laser_pos, "alien")
             
@@ -61,8 +69,10 @@ def main(stdscr):
                              alien_height, 
                              ship_laser_pos if ship_laser_active else None,
                              enemy_laser_pos if enemy_laser_active else None,
-                             [hit_x, alien_height] if alien_hit else None)
+                             [hit_x, alien_height] if alien_hit else None,
+                             ship_hit)
             alien_hit = False
+
 
             key = stdscr.getch()
             ship_pos = update_ship_position(ship_pos, key)

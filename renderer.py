@@ -8,7 +8,7 @@ def draw_home_screen(stdscr):
     stdscr.addstr(8, 5, "Hit Enter to Start Game...")
     stdscr.refresh()
 
-def draw_game_screen(stdscr, ship_pos, ship_laser_active, enemy_laser_active, aliens, alien_height, ship_laser_pos, enemy_laser_pos, ship_hit):
+def draw_game_screen(stdscr, ship_pos, ship_laser_active, enemy_laser_active, aliens, alien_height, ship_laser_pos, enemy_laser_pos, enemy_hit, ship_hit):
     
     stdscr.clear()
     # create background
@@ -17,7 +17,8 @@ def draw_game_screen(stdscr, ship_pos, ship_laser_active, enemy_laser_active, al
         stdscr.addstr(i, game_width - 1, "|")
 
     # add ship
-    stdscr.addstr(game_height - 2, ship_pos, "A")
+    if not ship_hit:
+        stdscr.addstr(game_height - 2, ship_pos, "A")
 
     # add aliens
     for i, alien in enumerate(aliens):
@@ -29,11 +30,11 @@ def draw_game_screen(stdscr, ship_pos, ship_laser_active, enemy_laser_active, al
         stdscr.addstr(ship_laser_pos[1], ship_laser_pos[0], "|")
     stdscr.refresh()
 
-    if enemy_laser_active:
+    if enemy_laser_active and not ship_hit:
         stdscr.addstr(enemy_laser_pos[1], enemy_laser_pos[0], "*")
     stdscr.refresh()
 
-    if ship_hit:
+    if enemy_hit:
         stdscr.addstr(ship_hit[1], ship_hit[0] + 5, "X")
     stdscr.refresh()
 
@@ -42,5 +43,32 @@ def draw_game_won(stdscr):
     stdscr.addstr(4, 5, "VICTORY!!!")
     stdscr.addstr(8, 5, "Hit Enter to Start new Game...")
     stdscr.refresh()
+
+def draw_game_over(stdscr):
+    stdscr.clear()
+    stdscr.addstr(4, 5, "Game Over!!!")
+    stdscr.addstr(8, 5, "Hit Enter to Start new Game...")
+    stdscr.refresh()
     
 
+def animate_ship_explosion(ship_pos, height, stdscr):
+    explosion_frames = [
+        "  X  ",
+        " X X ",
+        "XXXXX",
+        " X X ",
+        "  X  "
+    ]
+    frame_delay = 100
+    explosion_time = 2000
+    time_elapsed = 0
+
+    while time_elapsed < explosion_time:
+        for frame in explosion_frames:
+            stdscr.addstr(height, ship_pos, frame)
+            stdscr.refresh()
+            curses.napms(frame_delay)  # Adjust the delay as needed
+            stdscr.addstr(height, ship_pos, "     ")  # Clear the explosion
+            time_elapsed += frame_delay
+            if time_elapsed >= explosion_time:
+                break
